@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -474,6 +475,14 @@ document.getElementById("listingForm").addEventListener("submit", event => {
 
 document.getElementById("year").textContent = new Date().getFullYear();
 renderListings();
+  JavaScript
+const SUPABASE_URL = https://uqfzuspzmwbttgiulkof.supabase.co/rest/v1/
+const SUPABASE_KEY = sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej
+
+const supabaseClient = window.supabase.createClient(
+  https://uqfzuspzmwbttgiulkof.supabase.co/rest/v1/
+  sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej
+);
 </script>
 
 </body>
