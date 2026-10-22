@@ -475,16 +475,18 @@ document.getElementById("listingForm").addEventListener("submit", event => {
 
 document.getElementById("year").textContent = new Date().getFullYear();
 renderListings();
-  JavaScript
-  <script>
-const SUPABASE_URL =  "https://uqfzuspzmwbttgiulkof.supabase.co", 
-const SUPABASE_KEY = sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</script>
+<script>
+const SUPABASE_URL = "https://uqfzuspzmwbttgiulkof.supabase.co";
+const SUPABASE_KEY = "sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej";
+
 const supabaseClient = window.supabase.createClient(
-  "https://uqfzuspzmwbttgiulkof.supabase.co", 
-  sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 </script>
+
 
 <section id="auth-section">
   <h2>Welcome to Zanvique</h2>
