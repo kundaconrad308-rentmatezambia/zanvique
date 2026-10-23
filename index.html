@@ -280,6 +280,24 @@ dialog input, dialog select, dialog textarea {
       <option>Other</option>
     </select>
     <label for="itemPrice">Price in ZMW (optional)</label>
+    <label for="itemProvince">Province</label>
+<select id="itemProvince" required>
+  <option value="">Choose province</option>
+  <option value="Copperbelt">Copperbelt</option>
+  <option value="Lusaka">Lusaka</option>
+  <option value="Central">Central</option>
+  <option value="Eastern">Eastern</option>
+  <option value="Luapula">Luapula</option>
+  <option value="Muchinga">Muchinga</option>
+  <option value="Northern">Northern</option>
+  <option value="North-Western">North-Western</option>
+  <option value="Southern">Southern</option>
+  <option value="Western">Western</option>
+</select>
+
+<label for="itemTown">Town</label>
+<input id="itemTown" required placeholder="e.g. Kitwe">
+
     <input id="itemPrice" type="number" min="0" step="0.01" placeholder="e.g. 1500">
     <label for="itemDescription">Description</label>
     <textarea id="itemDescription" maxlength="500" required rows="3" placeholder="Describe what you are offering"></textarea>
