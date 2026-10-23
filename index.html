@@ -556,9 +556,52 @@ if (error) {
     dashboard = document.createElement("section");
     dashboard.id = "dashboard";
     dashboard.innerHTML = `
-      <h2>Welcome to Zanvique!</h2>
-      <p>You are now logged in.</p>
-      <p>Discover products and services near you.</p>
+      
+<h2>Welcome to Zanvique!</h2>
+<p>You are now logged in.</p>
+<p>Find products and services across Zambia.</p>
+
+<hr>
+
+<h3>Discover Near You</h3>
+
+<label for="province">Choose Province:</label>
+<select id="province">
+  <option value="Copperbelt">Copperbelt</option>
+  <option value="Lusaka">Lusaka</option>
+  <option value="Central">Central</option>
+  <option value="Eastern">Eastern</option>
+  <option value="Luapula">Luapula</option>
+  <option value="Muchinga">Muchinga</option>
+  <option value="Northern">Northern</option>
+  <option value="North-Western">North-Western</option>
+  <option value="Southern">Southern</option>
+  <option value="Western">Western</option>
+</select>
+
+<br><br>
+
+<label for="town">Enter Town:</label>
+<input id="town" type="text" placeholder="e.g. Kitwe">
+
+<br><br>
+
+<label for="category">What are you looking for?</label>
+<select id="category">
+  <option value="All">All products and services</option>
+  <option value="Products">Products</option>
+  <option value="Services">Services</option>
+</select>
+
+<br><br>
+
+<input id="search-term" type="text" placeholder="Search for something...">
+
+<br><br>
+
+<button id="search-button" type="button">Search Zanvique</button>
+
+<div id="search-results"></div>
     `;
     document.body.appendChild(dashboard);
   }
