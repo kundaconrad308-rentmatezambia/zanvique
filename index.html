@@ -452,7 +452,49 @@ document.getElementById("categories").addEventListener("click", event => {
   renderListings();
 });
 
-document.getElementById("listingForm").addEventListener("submit", event => {
+document.getElementById("listingForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const phone = document.getElementById("sellerPhone").value.trim();
+  const digits = phone.replace(/\D/g, "");
+
+  if (digits.length < 10 || digits.length > 15) {
+    alert("Enter a valid WhatsApp number with country code, e.g. 26097XXXXXXX.");
+    return;
+  }
+
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Please log in before publishing a listing.");
+    return;
+  }
+
+  const item = {
+    title: document.getElementById("itemTitle").value.trim(),
+    category: document.getElementById("itemCategory").value,
+    price: document.getElementById("itemPrice").value || null,
+    description: document.getElementById("itemDescription").value.trim(),
+    phone: phone,
+    user_id: user.id
+  };
+
+  const { error } = await supabaseClient
+    .from("listings")
+    .insert(item);
+
+  if (error) {
+    alert("Listing could not be published: " + error.message);
+    return;
+  }
+
+  document.getElementById("listingForm").reset();
+  closeListing();
+
+  alert("Listing published online successfully!");
+});
+
   event.preventDefault();
 
   const phone = document.getElementById("sellerPhone").value.trim();
