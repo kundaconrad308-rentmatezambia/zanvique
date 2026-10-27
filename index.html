@@ -502,44 +502,6 @@ document.getElementById("listingForm").addEventListener("submit", async event =>
   alert("Listing published online successfully!");
 });
 
-  event.preventDefault();
-
-  const phone = document.getElementById("sellerPhone").value.trim();
-  const digits = phone.replace(/\D/g, "");
-
-  if (digits.length < 10 || digits.length > 15) {
-    alert("Please enter a valid WhatsApp number including the country code, e.g. 26097XXXXXXX.");
-    return;
-  }
-
-  const item = {
-    id: "listing_" + Date.now(),
-    title: document.getElementById("itemTitle").value.trim(),
-    category: document.getElementById("itemCategory").value,
-    price: document.getElementById("itemPrice").value,
-    description: document.getElementById("itemDescription").value.trim(),
-    phone: phone,
-    emoji: "✨",
-    sample: false
-  };
-
-  listings.unshift(item);
-
-  if (saveListings()) {
-    document.getElementById("listingForm").reset();
-    closeListing();
-    selectedCategory = "All";
-    document.querySelectorAll("#categories button").forEach(button => {
-      button.classList.toggle("active", button.dataset.category === "All");
-    });
-    document.getElementById("searchInput").value = "";
-    renderListings();
-    alert("Listing saved on this device!");
-  } else {
-    listings.shift();
-  }
-});
-
 document.getElementById("year").textContent = new Date().getFullYear();
 renderListings();
 
