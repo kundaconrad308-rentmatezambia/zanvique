@@ -421,7 +421,16 @@ function renderListings() {
 }
 
 function openListing() {
-  document.getElementById("listingDialog").showModal();
+  const dialog = document.getElementById("listingDialog");
+
+  if (!dialog) {
+    alert("Listing window not found.");
+    return;
+  }
+
+  if (!dialog.open) {
+    dialog.showModal();
+  }
 }
 
 function closeListing() {
