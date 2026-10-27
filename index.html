@@ -423,17 +423,12 @@ function renderListings() {
 function openListing() {
   const dialog = document.getElementById("listingDialog");
 
-  if (!dialog) {
-    alert("ERROR: Listing window not found.");
-    return;
+  if (dialog) {
+    dialog.setAttribute("open", "");
+    dialog.style.display = "block";
+  } else {
+    alert("Listing dialog not found!");
   }
-
-  if (typeof dialog.showModal !== "function") {
-    alert("ERROR: Listing window cannot open.");
-    return;
-  }
-
-  dialog.showModal();
 }
 
 function closeListing() {
