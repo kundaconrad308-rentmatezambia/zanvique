@@ -424,13 +424,16 @@ function openListing() {
   const dialog = document.getElementById("listingDialog");
 
   if (!dialog) {
-    alert("Listing window not found.");
+    alert("ERROR: Listing window not found.");
     return;
   }
 
-  if (!dialog.open) {
-    dialog.showModal();
+  if (typeof dialog.showModal !== "function") {
+    alert("ERROR: Listing window cannot open.");
+    return;
   }
+
+  dialog.showModal();
 }
 
 function closeListing() {
