@@ -488,7 +488,7 @@ document.getElementById("listingForm").addEventListener("submit", async event =>
   };
 
   const { error } = await supabaseClient
-    .from("Listing")
+    .from("listings")
     .insert(item);
 
   if (error) {
