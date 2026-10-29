@@ -483,12 +483,12 @@ document.getElementById("listingForm").addEventListener("submit", async event =>
     category: document.getElementById("itemCategory").value,
     price: document.getElementById("itemPrice").value || null,
     description: document.getElementById("itemDescription").value.trim(),
-    phone: phone,
+    contact: phone,
     user_id: user.id
   };
 
   const { error } = await supabaseClient
-    .from("listings")
+    .from("listing")
     .insert(item);
 
   if (error) {
