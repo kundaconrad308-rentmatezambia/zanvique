@@ -77,8 +77,8 @@
 <script>
 const SUPABASE_URL = "https://uqfzuspzmwbttgiulkof.supabase.co";
 // Paste your Supabase publishable/anon key between the quotes below. Never use a service_role key in a browser app.
-const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
-const supabaseReady = !!(window.supabase && SUPABASE_ANON_KEY !== "PASTE_YOUR_SUPABASE_ANON_KEY_HERE");
+const SUPABASE_ANON_KEY = "sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej";
+const supabaseReady = !!(window.supabase && SUPABASE_ANON_KEY !== "sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej";
 const sb = supabaseReady ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
 const PROVINCES={"Central":["Kabwe","Kapiri Mposhi","Mkushi","Serenje","Mumbwa"],"Copperbelt":["Kitwe","Ndola","Chingola","Mufulira","Luanshya","Kalulushi","Chililabombwe","Lufwanyama","Masaiti"],"Eastern":["Chipata","Katete","Petauke","Lundazi","Nyimba","Chadiza"],"Luapula":["Mansa","Samfya","Nchelenge","Kawambwa","Mwense","Chembe"],"Lusaka":["Lusaka","Chongwe","Kafue","Chilanga","Rufunsa"],"Muchinga":["Chinsali","Mpika","Nakonde","Isoka","Shiwang'andu","Mafinga"],"Northern":["Kasama","Mbala","Mpulungu","Mungwi","Luwingu","Kaputa"],"North-Western":["Solwezi","Mwinilunga","Zambezi","Kasempa","Mushindamo","Chavuma"],"Southern":["Livingstone","Choma","Mazabuka","Monze","Kalomo","Pemba","Siavonga","Sinazongwe"],"Western":["Mongu","Senanga","Sesheke","Kaoma","Limulunga","Kalabo"]};
 const CATEGORIES=["Electronics","Fashion","Services","Home & Living","Agriculture","Vehicles","Property","Food & Groceries","Other"];
