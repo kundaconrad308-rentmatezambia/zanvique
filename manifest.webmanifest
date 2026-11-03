@@ -1,0 +1,17 @@
+{
+  "name": "Zanvique",
+  "short_name": "Zanvique",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8faf7",
+  "theme_color": "#123c2b",
+  "description": "Discover products, services and opportunities across Zambia.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

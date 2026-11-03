@@ -1,248 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#123c2b">
-<meta name="description" content="Discover products, services and opportunities with Zanvique. Explore local listings across Zambia and connect directly with sellers.">
-<title>Zanvique | Discover More</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123c2b"><meta name="description" content="Discover products, services and opportunities with Zanvique. Explore local listings and connect directly with sellers.">
+<title>Zanvique — Discover more. Connect better.</title>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg">
 <style>
-:root{--green:#123c2b;--green2:#1e5a40;--lime:#c9f36b;--cream:#f7f8f2;--ink:#17231c;--muted:#68746c;--line:#e2e8df;--white:#fff;--red:#a83232}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}a{color:inherit}
-header{background:var(--green);color:#fff;padding:15px 5%;position:sticky;top:0;z-index:5;box-shadow:0 3px 12px #0001}
-.nav{max-width:1150px;margin:auto;display:flex;align-items:center;gap:16px;justify-content:space-between}.logo{font-weight:900;font-size:27px;letter-spacing:-1px}.logo span{color:var(--lime)}.navlinks{display:flex;align-items:center;gap:18px}.navlinks a{text-decoration:none;font-size:14px}.btn{background:var(--lime);color:var(--green);font-weight:800;padding:12px 16px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn:disabled{opacity:.6;cursor:wait}.btn.secondary{background:#edf1eb;color:var(--green)}.btn.outline{background:transparent;color:#fff;border:1px solid #ffffff55}.btn.small{padding:9px 11px;font-size:13px}
-.hero{background:var(--green);color:#fff;padding:48px 5% 58px;border-radius:0 0 28px 28px}.hero-inner{max-width:1050px;margin:auto}.tag{font-size:11px;letter-spacing:2px;font-weight:900;color:var(--lime)}h1{font-size:clamp(36px,7vw,62px);line-height:1.04;letter-spacing:-2px;max-width:720px;margin:15px 0}.hero p{color:#d9e5dc;line-height:1.7;max-width:580px}.searchbar{display:flex;gap:8px;background:#fff;padding:7px;border-radius:13px;max-width:760px;margin-top:25px}.searchbar input{flex:1;min-width:0;border:0;outline:0;padding:12px;color:var(--ink)}main{max-width:1150px;padding:30px 5%;margin:auto}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}h2{font-size:25px;margin:0 0 7px}.muted{color:var(--muted);font-size:14px}.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 14px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea,.filters select{width:100%;padding:12px;border:1px solid #d7dfd5;border-radius:10px;background:#fff;color:var(--ink);outline-color:var(--green2)}.categories{display:flex;gap:8px;overflow-x:auto;padding:8px 0 17px}.categories button{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 15px;color:var(--ink)}.categories button.active{background:var(--green);color:#fff;border-color:var(--green)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:15px;margin-top:8px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0}.card-art{height:130px;background:#e8efdf;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}.heart{position:absolute;right:10px;top:10px;background:#fff;border-radius:50%;width:38px;height:38px;font-size:21px;color:var(--green)}.heart.saved{color:#c33}.card-body{padding:15px}.pill{display:inline-block;background:#eaf4db;color:var(--green);padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800}.card h3{margin:10px 0 7px;font-size:17px;overflow-wrap:anywhere}.card p{font-size:13px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}.price{font-weight:900;font-size:18px;margin:10px 0}.meta{font-size:12px;color:var(--muted);margin:9px 0 12px}.card-actions{display:flex;gap:7px;flex-wrap:wrap}.card-actions a,.card-actions button{font-size:12px;text-decoration:none;padding:10px;border-radius:8px}.empty{grid-column:1/-1;text-align:center;padding:38px 12px;background:#fff;border:1px dashed #cbd5c8;border-radius:14px;color:var(--muted)}.notice{padding:12px 14px;border-radius:10px;background:#eef3e9;color:var(--green);font-size:13px;margin:14px 0;overflow-wrap:anywhere}.notice.error{background:#fff0ef;color:var(--red)}.notice:empty{display:none}.cta{background:#e9f2df;border-radius:20px;padding:26px;margin-top:40px}.cta p{line-height:1.6}.account{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:28px}.account-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.account form{display:grid;gap:10px}.account h3{margin:0 0 8px}.account input{width:100%;padding:12px;border:1px solid #d7dfd5;border-radius:9px}.account .btn{width:100%}.account-status{font-size:13px;color:var(--muted);margin-top:10px;overflow-wrap:anywhere}.hidden{display:none!important}footer{background:#10251c;color:#dce7de;padding:28px 5%;margin-top:42px;font-size:13px}footer .foot{max-width:1050px;margin:auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}footer a{color:var(--lime)}dialog{border:0;border-radius:18px;width:min(520px,94vw);padding:0;max-height:90vh;overflow:auto;box-shadow:0 20px 70px #0004}dialog::backdrop{background:#0009}.modal-head{display:flex;align-items:center;justify-content:space-between;background:var(--green);color:#fff;padding:17px 20px}.modal-head h2{margin:0;font-size:20px}.close{background:transparent;color:#fff;font-size:27px}.modal-body{padding:20px;display:grid;gap:13px}.modal-body .field{margin:0}.modal-actions{display:flex;gap:8px;flex-wrap:wrap}.modal-help{font-size:12px;color:var(--muted);line-height:1.5;margin:0}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#17231c;color:#fff;padding:12px 17px;border-radius:12px;max-width:90vw;z-index:10;display:none;font-size:14px}.toast.show{display:block}
-@media(max-width:650px){.nav{flex-wrap:wrap}.navlinks{gap:12px}.navlinks a{display:none}.hero{padding-top:38px}.filters{grid-template-columns:1fr}.searchbar .btn{padding:11px}.grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}.card-art{height:100px}.card-body{padding:12px}.card h3{font-size:15px}.nav .btn{padding:10px 12px}.account{padding:15px}}
+:root{--green:#123c2b;--green2:#1d563d;--lime:#c9f36b;--cream:#f5f0e6;--ink:#17231c;--muted:#66736b;--line:#e2e8e2;--white:#fff;--shadow:0 12px 35px #102b1b12}
+*{box-sizing:border-box}body{margin:0;background:#f8faf7;color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.top{background:var(--green);color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 4px 16px #0002}.nav{max-width:1180px;margin:auto;padding:13px 18px;display:flex;align-items:center;gap:16px}.brand{font-weight:900;letter-spacing:1px;font-size:23px;color:var(--lime);white-space:nowrap}.tag{font-size:11px;color:#dce9df;display:block;font-weight:500;letter-spacing:0}.navlinks{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:10px 15px;font-weight:750;background:var(--lime);color:var(--green)}.btn.dark{background:var(--green);color:#fff}.btn.ghost{background:transparent;color:inherit;border:1px solid currentColor}.btn.light{background:#edf4ed;color:var(--green)}.btn.small{padding:7px 10px;font-size:13px}.wrap{max-width:1180px;margin:auto;padding:24px 18px 80px}.hero{background:linear-gradient(120deg,#123c2b,#1e6142);color:white;border-radius:24px;padding:30px;display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:center;overflow:hidden}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:8px 0 12px}.hero p{color:#e0ece3;max-width:600px}.hero .pill{color:var(--lime);font-weight:800;font-size:12px;letter-spacing:1.3px}.heroart{font-size:92px;text-align:center;filter:drop-shadow(0 10px 15px #0003)}.searchpanel{margin-top:20px;background:white;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.searchrow{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:9px}.field{width:100%;border:1px solid #dce4dc;background:#fff;border-radius:11px;padding:11px 12px;color:var(--ink);min-width:0}.field:focus{outline:2px solid #c9f36b; border-color:#8cae65}label{display:block;font-weight:700;font-size:12px;color:#526057;margin:0 0 5px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.chip{border:1px solid #dce5dc;background:white;border-radius:999px;padding:8px 13px;color:#435148;font-weight:700}.chip.active{background:var(--green);color:white;border-color:var(--green)}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:24px 0 13px}.sectionhead h2{font-size:22px;margin:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{background:white;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 5px 20px #183b2410}.photo{height:175px;background:linear-gradient(135deg,#eaf1e9,#f7f1df);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#708074;font-size:42px}.photo img{width:100%;height:100%;object-fit:cover}.cardbody{padding:14px}.meta{font-size:12px;color:var(--muted)}.price{font-size:19px;font-weight:900;color:var(--green);margin:6px 0}.card h3{margin:5px 0;font-size:16px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.empty{padding:35px;text-align:center;background:white;border:1px dashed #cbd8cb;border-radius:16px;color:var(--muted)}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}.hidden{display:none!important}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.span2{grid-column:1/-1}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 18px}.tab{border:0;background:#edf3ed;color:#375343;padding:9px 13px;border-radius:10px;font-weight:750}.tab.active{background:var(--green);color:#fff}.modal{position:fixed;inset:0;background:#07160dcc;z-index:30;display:none;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:20px;width:min(650px,100%);max-height:92vh;overflow:auto;padding:22px}.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#edf2ed;border-radius:50%;width:34px;height:34px;font-size:20px}.notice{padding:12px;border-radius:12px;background:#f0f6e9;color:#35522d;margin:10px 0}.danger{background:#fff0ed;color:#8c2e20}.muted{color:var(--muted)}.footer{background:var(--green);color:#e5eee7;padding:28px 18px;text-align:center}.footer strong{color:var(--lime)}.badge{font-size:10px;padding:4px 7px;border-radius:30px;background:#eaf4df;color:#355b27;font-weight:800}.detailphoto{width:100%;max-height:300px;object-fit:cover;border-radius:14px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f1f5f0;border-radius:13px;padding:14px}.stat b{display:block;font-size:23px;color:var(--green)}.mobilemenu{display:none}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.heroart{display:none}.searchrow{grid-template-columns:1fr 1fr}.searchrow input{grid-column:1/-1}.searchrow button{grid-column:1/-1}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{flex-wrap:wrap}.navlinks{margin-left:0;width:100%;overflow:auto}.navlinks .btn{flex:1}.wrap{padding:17px 12px 70px}}
+@media(max-width:520px){.grid{grid-template-columns:1fr 1fr;gap:9px}.photo{height:125px}.cardbody{padding:10px}.card h3{font-size:14px}.price{font-size:16px}.hero{padding:23px 18px}.formgrid,.twocol{grid-template-columns:1fr}.span2{grid-column:auto}.navlinks .btn{padding:8px 9px;font-size:12px}.brand{font-size:21px}}
 </style>
 </head>
 <body>
-<header><nav class="nav">
-  <a class="logo" href="#" aria-label="Zanvique home" style="text-decoration:none">zanvique<span>.</span></a>
-  <div class="navlinks"><a href="#explore">Explore</a><a href="#account">My account</a><button class="btn" id="openListingTop" type="button">ï¼‹ Create listing</button></div>
-</nav></header>
-<section class="hero"><div class="hero-inner">
-  <div class="tag">MADE FOR DISCOVERY IN ZAMBIA</div>
-  <h1>Your next great find starts here.</h1>
-  <p>Discover products, services and opportunities near you. Search local listings and connect directly with sellers.</p>
-  <form class="searchbar" id="searchForm"><input id="searchInput" type="search" placeholder="Try phones, furniture, plumbing..." aria-label="Search listings"><button class="btn" type="submit">Search</button></form>
-</div></section>
-<main>
-  <section id="explore">
-    <div class="section-head"><div><h2>Explore Zanvique</h2><div class="muted" id="resultCount">Loading listingsâ€¦</div></div><button class="btn secondary small" id="resetFilters" type="button">Reset filters</button></div>
-    <div class="filters">
-      <div class="field"><label for="provinceFilter">Province</label><select id="provinceFilter"><option value="">All provinces</option><option>Copperbelt</option><option>Lusaka</option><option>Central</option><option>Eastern</option><option>Luapula</option><option>Muchinga</option><option>Northern</option><option>North-Western</option><option>Southern</option><option>Western</option></select></div>
-      <div class="field"><label for="townFilter">Town</label><input id="townFilter" type="search" placeholder="e.g. Kitwe"></div>
-      <div class="field"><label for="sortFilter">Sort by</label><select id="sortFilter"><option value="newest">Newest first</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="title">Name Aâ€“Z</option></select></div>
-    </div>
-    <div class="categories" id="categories" aria-label="Filter by category">
-      <button class="active" type="button" data-category="All">All</button><button type="button" data-category="Electronics">Electronics</button><button type="button" data-category="Fashion">Fashion</button><button type="button" data-category="Services">Services</button><button type="button" data-category="Home">Home &amp; Living</button><button type="button" data-category="Food">Food</button><button type="button" data-category="Other">Other</button>
-    </div>
-    <div id="pageNotice" class="notice" role="status"></div>
-    <div class="grid" id="listingGrid"><div class="empty">Loading listingsâ€¦</div></div>
-  </section>
-  <section class="cta"><div class="tag">YOUR OPPORTUNITY</div><h2>Have something to offer?</h2><p>Help people in your town discover your product or service.</p><button class="btn" id="openListingBottom" type="button">ï¼‹ Create a listing</button></section>
-  <section class="account" id="account">
-    <div class="section-head"><div><h2>My account</h2><p class="muted">Sign in to publish and manage your own listings.</p></div><div id="signedInLabel" class="muted"></div></div>
-    <div id="authForms" class="account-grid">
-      <form id="signupForm"><h3>Create account</h3><input id="signupEmail" type="email" autocomplete="email" placeholder="Email address" required><input id="signupPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Password (at least 6 characters)" required><button class="btn" type="submit">Create account</button></form>
-      <form id="loginForm"><h3>Log in</h3><input id="loginEmail" type="email" autocomplete="email" placeholder="Email address" required><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password" required><button class="btn" type="submit">Log in</button></form>
-    </div>
-    <div id="accountActions" class="hidden"><p id="accountWelcome"></p><button class="btn secondary small" id="logoutButton" type="button">Log out</button><h3 style="margin-top:20px">My listings</h3><div id="myListings" class="muted">Sign in to see your listings.</div></div>
-    <div id="authMessage" class="account-status" role="status"></div>
-  </section>
+<header class="top"><div class="nav">
+ <div class="brand">ZANVIQUE<span class="tag">Discover more. Connect better.</span></div>
+ <nav class="navlinks">
+  <button class="btn ghost small" onclick="showPage('home')">Explore</button>
+  <button class="btn ghost small" onclick="showPage('dashboard')">My account</button>
+  <button class="btn ghost small" onclick="showPage('business')">Businesses</button>
+  <button class="btn small" onclick="openListing()">+ Add listing</button>
+  <button class="btn light small" id="authButton" onclick="openAuth()">Sign in</button>
+ </nav>
+</div></header>
+<main class="wrap">
+<section id="homePage">
+ <div class="hero"><div><div class="pill">ZAMBIA'S MARKETPLACE & DISCOVERY PLATFORM</div><h1>Find what you need.<br><span style="color:var(--lime)">Discover what's nearby.</span></h1><p>Explore products, services and opportunities across Zambia. Connect directly with sellers and local businesses.</p><button class="btn" onclick="openListing()">Start selling on Zanvique →</button></div><div class="heroart">🛍️</div></div>
+ <div class="searchpanel"><div class="searchrow">
+  <input class="field" id="searchText" placeholder="Search products, services or sellers..." oninput="renderListings()">
+  <select class="field" id="provinceFilter" onchange="updateTownFilter();renderListings()"></select>
+  <select class="field" id="townFilter" onchange="renderListings()"><option value="">All towns</option></select>
+  <select class="field" id="sortFilter" onchange="renderListings()"><option value="new">Newest first</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+  <button class="btn" onclick="renderListings()">Search</button>
+ </div></div>
+ <div class="filters" id="categoryFilters"></div>
+ <div class="sectionhead"><h2 id="listingHeading">Discover listings</h2><span class="meta" id="resultCount"></span></div>
+ <div class="grid" id="listingGrid"></div><div id="emptyState" class="empty hidden">No listings found. Try another search or be the first to <a href="#" onclick="openListing();return false">post a listing</a>.</div>
+ <div class="sectionhead"><h2>Discover across Zambia</h2></div>
+ <div class="panel"><p class="muted">Browse by province. Choose a province above to narrow your search to its towns and listings.</p><div id="provinceLinks" class="filters"></div></div>
+</section>
+<section id="dashboardPage" class="hidden">
+ <div class="sectionhead"><h2>My Zanvique</h2><button class="btn light small" onclick="signOut()">Sign out</button></div>
+ <div id="dashboardContent" class="panel"></div>
+ <div class="tabs" id="dashboardTabs"><button class="tab active" onclick="dashboardTab('mine',this)">My listings</button><button class="tab" onclick="dashboardTab('saved',this)">Favourites</button><button class="tab" onclick="dashboardTab('profile',this)">Profile</button><button class="tab" onclick="dashboardTab('notifications',this)">Notifications</button></div>
+ <div id="dashboardTabContent"></div>
+</section>
+<section id="businessPage" class="hidden">
+ <div class="sectionhead"><h2>Business directory</h2><button class="btn" onclick="openBusiness()">Create business profile</button></div>
+ <p class="muted">Discover local businesses and service providers around Zambia.</p><div id="businessGrid" class="grid"></div>
+</section>
+<section id="adminPage" class="hidden">
+ <div class="sectionhead"><h2>Administration</h2><span class="badge">ADMIN</span></div>
+ <div id="adminContent" class="panel"></div>
+</section>
 </main>
-<footer><div class="foot"><div><strong>zanvique.</strong><br>Discover more. Connect better.</div><div>Built for local discovery across Zambia.<br><a href="#explore">Explore listings</a></div><div>Â© <span id="year"></span> Zanvique</div></div></footer>
+<footer class="footer"><strong>ZANVIQUE</strong><p>Made for discovery. Built to grow.</p><small>© <span id="year"></span> Zanvique. Connect better.</small></footer>
 
-<dialog id="listingDialog">
-  <div class="modal-head"><h2>Create a listing</h2><button class="close" id="closeDialog" type="button" aria-label="Close">Ã—</button></div>
-  <form id="listingForm" class="modal-body">
-    <p class="modal-help">You must be logged in to publish. Your listing will be sent to the Zanvique database.</p>
-    <div class="field"><label for="itemTitle">Product or service name *</label><input id="itemTitle" required maxlength="100" placeholder="e.g. Used Samsung phone"></div>
-    <div class="field"><label for="itemCategory">Category *</label><select id="itemCategory" required><option>Electronics</option><option>Fashion</option><option>Services</option><option>Home</option><option>Food</option><option>Other</option></select></div>
-    <div class="field"><label for="itemPrice">Price in ZMW (optional)</label><input id="itemPrice" type="number" min="0" step="0.01" placeholder="e.g. 1500"></div>
-    <div class="field"><label for="itemProvince">Province *</label><select id="itemProvince" required><option value="">Choose province</option><option>Copperbelt</option><option>Lusaka</option><option>Central</option><option>Eastern</option><option>Luapula</option><option>Muchinga</option><option>Northern</option><option>North-Western</option><option>Southern</option><option>Western</option></select></div>
-    <div class="field"><label for="itemTown">Town *</label><input id="itemTown" required maxlength="80" placeholder="e.g. Kitwe"></div>
-    <div class="field"><label for="itemDescription">Description *</label><textarea id="itemDescription" required maxlength="1000" rows="3" placeholder="Describe what you are offering"></textarea></div>
-    <div class="field"><label for="sellerContact">WhatsApp/contact number *</label><input id="sellerContact" type="tel" required maxlength="25" placeholder="e.g. 26097XXXXXXX"></div>
-    <div id="listingMessage" class="notice" role="status"></div>
-    <div class="modal-actions"><button class="btn" id="publishButton" type="submit">Publish listing</button><button class="btn secondary" id="cancelDialog" type="button">Cancel</button></div>
-  </form>
-</dialog>
-<div class="toast" id="toast" role="status"></div>
+<div class="modal" id="authModal"><div class="modalbox"><div class="modalhead"><h2 id="authTitle">Welcome to Zanvique</h2><button class="close" onclick="closeModal('authModal')">×</button></div>
+ <div class="tabs"><button class="tab active" id="loginTab" onclick="authMode('login')">Sign in</button><button class="tab" id="signupTab" onclick="authMode('signup')">Create account</button></div>
+ <form id="authForm"><div id="nameWrap" class="hidden"><label>Full name</label><input class="field" id="authName" autocomplete="name"></div><label>Email address</label><input class="field" id="authEmail" type="email" required autocomplete="email"><label style="margin-top:10px">Password</label><input class="field" id="authPassword" type="password" minlength="6" required autocomplete="current-password"><button class="btn" style="width:100%;margin-top:15px" id="authSubmit">Sign in</button></form><div id="authMessage"></div><p class="meta">Your account lets you publish and manage your listings.</p></div></div>
+
+<div class="modal" id="listingModal"><div class="modalbox"><div class="modalhead"><h2 id="listingModalTitle">Create a listing</h2><button class="close" onclick="closeModal('listingModal')">×</button></div>
+ <form id="listingForm"><input type="hidden" id="editId"><div class="formgrid">
+ <div class="span2"><label>Product or service title *</label><input class="field" id="lTitle" required maxlength="100" placeholder="e.g. Samsung Galaxy phone"></div>
+ <div><label>Category *</label><select class="field" id="lCategory" required></select></div><div><label>Price (ZMW)</label><input class="field" id="lPrice" type="number" min="0" step="0.01" placeholder="e.g. 2500"></div>
+ <div><label>Province *</label><select class="field" id="lProvince" required></select></div><div><label>Town *</label><input class="field" id="lTown" required placeholder="e.g. Kitwe"></div>
+ <div><label>WhatsApp / phone *</label><input class="field" id="lPhone" required type="tel" placeholder="e.g. 097XXXXXXX"></div><div><label>Listing type</label><select class="field" id="lType"><option>For sale</option><option>Service offered</option><option>Wanted</option><option>Opportunity</option></select></div>
+ <div class="span2"><label>Description *</label><textarea class="field" id="lDescription" rows="4" required maxlength="3000" placeholder="Describe the item or service, condition, availability..."></textarea></div>
+ <div class="span2"><label>Product / service photo</label><input class="field" id="lImage" type="file" accept="image/*"><small class="meta">Images are uploaded to your connected Supabase storage.</small></div>
+ <div class="span2"><label><input type="checkbox" id="lFeatured"> Request featured placement (admin approval may be required)</label></div>
+ </div><button class="btn" style="width:100%;margin-top:16px">Publish listing</button><div id="listingMessage"></div></form></div></div>
+
+<div class="modal" id="detailModal"><div class="modalbox"><div class="modalhead"><h2>Listing details</h2><button class="close" onclick="closeModal('detailModal')">×</button></div><div id="detailContent"></div></div></div>
+<div class="modal" id="businessModal"><div class="modalbox"><div class="modalhead"><h2>Business profile</h2><button class="close" onclick="closeModal('businessModal')">×</button></div><form id="businessForm"><label>Business name</label><input class="field" id="bName" required><label>Business category</label><input class="field" id="bCategory" required placeholder="e.g. Auto repair"><label>Province</label><select class="field" id="bProvince"></select><label>Town</label><input class="field" id="bTown" required><label>Phone / WhatsApp</label><input class="field" id="bPhone" required><label>Description</label><textarea class="field" id="bDescription" rows="3"></textarea><button class="btn" style="width:100%;margin-top:12px">Save business profile</button><div id="businessMessage"></div></form></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(() => {
-  "use strict";
-  const SUPABASE_URL = "https://uqfzuspzmwbttgiulkof.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_dDhfa8F2zCopwWRDyHFXhA_o5_tLxej";
-  const TABLE_CANDIDATES = ["Listing"];
-  const $ = id => document.getElementById(id);
-  const localSavedKey = "zanvique_saved_v1";
-  let supabaseClient = null, currentUser = null, activeCategory = "All";
-  let listings = [], savedIds = loadSaved(), activeTable = null, loadError = "";
-  function loadSaved(){try{return JSON.parse(localStorage.getItem(localSavedKey)||"[]")}catch(_){return []}}
-  function saveSaved(){try{localStorage.setItem(localSavedKey,JSON.stringify(savedIds))}catch(_){}}
-  function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-  function normalized(item){
-    return {...item,
-      id:item.id ?? item.listing_id ?? `${item.title||item.name||"listing"}-${item.created_at||""}`,
-      title:item.title ?? item.name ?? item.product_name ?? "Untitled listing",
-      category:item.category ?? "Other",
-      description:item.description ?? "",
-      price:item.price ?? null,
-      province:item.province ?? "",
-      town:item.town ?? item.city ?? item.location ?? "",
-      contact:item.contact ?? item.phone ?? item.whatsapp ?? "",
-      user_id:item.user_id ?? item.user ?? null,
-      created_at:item.created_at ?? item.inserted_at ?? ""
-    };
-  }
-  function showNotice(message,isError=false){const el=$("pageNotice");el.textContent=message||"";el.classList.toggle("error",!!isError)}
-  function showAuthMessage(message,isError=false){$("authMessage").textContent=message||"";$("authMessage").style.color=isError?"var(--red)":"var(--muted)"}
-  function showListingMessage(message,isError=false){$("listingMessage").textContent=message||"";$("listingMessage").classList.toggle("error",!!isError)}
-  function toast(message){const t=$("toast");t.textContent=message;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)}
-  function money(price){const n=Number(price);return Number.isFinite(n)&&price!==""&&price!==null?"K"+n.toLocaleString("en-ZM",{maximumFractionDigits:2}):"Contact for price"}
-  function getText(item){return [item.title,item.description,item.category,item.province,item.town,item.contact].join(" ").toLowerCase()}
-  function filteredListings(){
-    const query=$("searchInput").value.trim().toLowerCase(), province=$("provinceFilter").value.toLowerCase(), town=$("townFilter").value.trim().toLowerCase(), sort=$("sortFilter").value;
-    let rows=listings.filter(item=>{
-      const categoryOk=activeCategory==="All"||String(item.category).toLowerCase()===activeCategory.toLowerCase();
-      const queryOk=!query||getText(item).includes(query);
-      const provinceOk=!province||String(item.province).toLowerCase()===province;
-      const townOk=!town||String(item.town).toLowerCase().includes(town);
-      return categoryOk&&queryOk&&provinceOk&&townOk;
-    });
-    rows.sort((a,b)=>{
-      if(sort==="price-low")return (Number(a.price)||Infinity)-(Number(b.price)||Infinity);
-      if(sort==="price-high")return (Number(b.price)||0)-(Number(a.price)||0);
-      if(sort==="title")return String(a.title).localeCompare(String(b.title));
-      return String(b.created_at).localeCompare(String(a.created_at));
-    });
-    return rows;
-  }
-  function listingCard(raw){
-    const item=normalized(raw), saved=savedIds.includes(String(item.id));
-    const digits=String(item.contact||"").replace(/\D/g,"");
-    const wa=digits?`https://wa.me/${digits}?text=${encodeURIComponent("Hi, I found your listing on Zanvique: "+item.title)}`:"";
-    return `<article class="card">
-      <div class="card-art"> ${item.category==="Electronics"?"ðŸ“±":item.category==="Fashion"?"ðŸ‘Ÿ":item.category==="Services"?"ðŸ› ï¸":item.category==="Home"?"ðŸ›‹ï¸":item.category==="Food"?"ðŸ¥¬":"âœ¨"}
-      <button class="heart ${saved?"saved":""}" type="button" data-save="${safe(item.id)}" aria-label="${saved?"Remove saved listing":"Save listing"}">${saved?"â™¥":"â™¡"}</button></div>
-      <div class="card-body"><span class="pill">${safe(item.category)}</span><h3>${safe(item.title)}</h3><p>${safe(item.description)}</p>
-      <div class="price">${money(item.price)}</div><div class="meta">âŒ– ${safe([item.town,item.province].filter(Boolean).join(", ")||"Zambia")}</div>
-      <div class="card-actions">${wa?`<a class="btn" href="${wa}" target="_blank" rel="noopener noreferrer">Contact seller</a>`:`<span class="muted">Contact details unavailable</span>`}
-      ${currentUser&&item.user_id===currentUser.id?`<button class="btn secondary" type="button" data-delete="${safe(item.id)}">Delete</button>`:""}</div></div></article>`;
-  }
-  function renderListings(){
-    const rows=filteredListings();$("resultCount").textContent=`${rows.length} ${rows.length===1?"listing":"listings"} found`;
-    $("listingGrid").innerHTML=rows.length?rows.map(listingCard).join(""):`<div class="empty"><h3>No listings found</h3><p>Try another search or remove a filter. New listings will appear here once published.</p></div>`;
-  }
-  async function tryTableRead(table){
-    const result=await supabaseClient.from(table).select("*").limit(250);
-    if(!result.error)return {table,data:result.data||[]};
-    return {table,error:result.error};
-  }
-  async function loadListings(){
-    if(!supabaseClient){showNotice("The database client did not load. Refresh the page and try again.",true);return}
-    $("listingGrid").innerHTML='<div class="empty">Loading listingsâ€¦</div>';
-    let lastError=null;
-    for(const table of (activeTable?[activeTable,...TABLE_CANDIDATES.filter(t=>t!==activeTable)]:TABLE_CANDIDATES)){
-      const result=await tryTableRead(table);
-      if(!result.error){activeTable=table;listings=result.data.map(normalized);loadError="";showNotice(listings.length?"Listings loaded from Zanvique.":"The database is connected, but no listings are published yet.");renderListings();renderMyListings();return}
-      lastError=result.error;
-      const msg=String(lastError.message||"").toLowerCase();
-      if(!(msg.includes("schema cache")||msg.includes("could not find the table")||msg.includes("relation")||msg.includes("does not exist")))break;
-    }
-    listings=[];loadError=lastError?.message||"Could not load listings";
-    showNotice("Could not load listings from Supabase: "+loadError+". The app is configured to use your existing table named 'listing'. No database table was changed.",true);
-    renderListings();renderMyListings();
-  }
-  function renderMyListings(){
-    const area=$("myListings");
-    if(!currentUser){area.textContent="Log in to view your listings.";return}
-    const mine=listings.filter(x=>String(x.user_id||"")===String(currentUser.id));
-    area.innerHTML=mine.length?`<div class="grid">${mine.map(listingCard).join("")}</div>`:"You have no listings published yet.";
-  }
-  function setUser(user){
-    currentUser=user||null;
-    $("authForms").classList.toggle("hidden",!!currentUser);
-    $("accountActions").classList.toggle("hidden",!currentUser);
-    $("signedInLabel").textContent=currentUser?currentUser.email:"Not signed in";
-    $("accountWelcome").textContent=currentUser?`Signed in as ${currentUser.email}. You can publish and manage your own listings.`:"";
-    if(currentUser)showAuthMessage("You are signed in."); else showAuthMessage("Sign in to publish listings.");
-    renderListings();renderMyListings();
-  }
-  async function openListing(){
-    if(!currentUser){$("account").scrollIntoView({behavior:"smooth"});showAuthMessage("Please log in before publishing a listing.",true);toast("Log in first to publish a listing.");return}
-    showListingMessage("");$("listingDialog").showModal();
-  }
-  async function publishListing(event){
-    event.preventDefault();
-    if(!currentUser){showListingMessage("Please log in before publishing.",true);return}
-    if(!activeTable){
-      showListingMessage("Could not connect to the existing table named listing. Refresh once; if this continues, check the table permissions and schema cache in Supabase.",true);return
-    }
-    const contact=$("sellerContact").value.trim(), digits=contact.replace(/\D/g,"");
-    if(digits.length<10||digits.length>15){showListingMessage("Enter a valid contact number with country code, e.g. 26097XXXXXXX.",true);return}
-    const item={
-      title:$("itemTitle").value.trim(),
-      category:$("itemCategory").value,
-      price:$("itemPrice").value?Number($("itemPrice").value):null,
-      province:$("itemProvince").value,
-      town:$("itemTown").value.trim(),
-      description:$("itemDescription").value.trim(),
-      contact:contact,
-      user_id:currentUser.id
-    };
-    const button=$("publishButton");button.disabled=true;button.textContent="Publishingâ€¦";showListingMessage("");
-    let result=await supabaseClient.from(activeTable).insert(item);
-    if(result.error){
-      const message=result.error.message||"Unknown database error";
-      showListingMessage("Publishing failed: "+message,true);
-    }else{
-      $("listingForm").reset();$("listingDialog").close();toast("Listing published!");
-      await loadListings();
-    }
-    button.disabled=false;button.textContent="Publish listing";
-  }
-  async function deleteListing(id){
-    if(!currentUser||!confirm("Delete this listing? This cannot be undone."))return;
-    if(!activeTable){toast("The listings table is not connected.");return}
-    const found=listings.find(x=>String(x.id)===String(id));
-    if(!found||String(found.user_id)!==String(currentUser.id)){toast("You can only delete your own listings.");return}
-    const {error}=await supabaseClient.from(activeTable).delete().eq("id",id).eq("user_id",currentUser.id);
-    if(error){showNotice("Could not delete listing: "+error.message,true);return}
-    toast("Listing deleted.");await loadListings();
-  }
-  document.addEventListener("click",async event=>{
-    const saveBtn=event.target.closest("[data-save]");
-    if(saveBtn){const id=String(saveBtn.dataset.save);savedIds=savedIds.includes(id)?savedIds.filter(x=>x!==id):[...savedIds,id];saveSaved();renderListings();renderMyListings();return}
-    const delBtn=event.target.closest("[data-delete]");
-    if(delBtn)await deleteListing(delBtn.dataset.delete);
-  });
-  $("searchInput").addEventListener("input",renderListings);
-  $("provinceFilter").addEventListener("change",renderListings);
-  $("townFilter").addEventListener("input",renderListings);
-  $("sortFilter").addEventListener("change",renderListings);
-  $("searchForm").addEventListener("submit",event=>{event.preventDefault();renderListings();$("explore").scrollIntoView({behavior:"smooth"})});
-  $("categories").addEventListener("click",event=>{const btn=event.target.closest("[data-category]");if(!btn)return;activeCategory=btn.dataset.category;document.querySelectorAll("#categories [data-category]").forEach(b=>b.classList.toggle("active",b===btn));renderListings()});
-  $("resetFilters").addEventListener("click",()=>{$("searchInput").value="";$("provinceFilter").value="";$("townFilter").value="";$("sortFilter").value="newest";activeCategory="All";document.querySelectorAll("#categories [data-category]").forEach(b=>b.classList.toggle("active",b.dataset.category==="All"));renderListings()});
-  $("openListingTop").addEventListener("click",openListing);$("openListingBottom").addEventListener("click",openListing);
-  $("closeDialog").addEventListener("click",()=>$("listingDialog").close());$("cancelDialog").addEventListener("click",()=>$("listingDialog").close());
-  $("listingForm").addEventListener("submit",publishListing);
-  $("signupForm").addEventListener("submit",async event=>{event.preventDefault();showAuthMessage("Creating your accountâ€¦");const {data,error}=await supabaseClient.auth.signUp({email:$("signupEmail").value.trim(),password:$("signupPassword").value});if(error){showAuthMessage(error.message,true);return}showAuthMessage(data.session?"Account created and signed in.":"Account created. Check your email if confirmation is required.");if(data.user&&data.session)setUser(data.user)});
-  $("loginForm").addEventListener("submit",async event=>{event.preventDefault();showAuthMessage("Logging inâ€¦");const {data,error}=await supabaseClient.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});if(error){showAuthMessage(error.message,true);return}setUser(data.user);await loadListings()});
-  $("logoutButton").addEventListener("click",async()=>{const {error}=await supabaseClient.auth.signOut();if(error){showAuthMessage(error.message,true);return}setUser(null);toast("Logged out.")});
-  $("year").textContent=new Date().getFullYear();
-  async function init(){
-    if(!window.supabase){showNotice("Supabase library failed to load. Check your internet connection and refresh.",true);$("listingGrid").innerHTML='<div class="empty">Could not connect to the app service.</div>';return}
-    try{supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(error){showNotice("Could not start the database client: "+error.message,true);return}
-    const {data:{user},error}=await supabaseClient.auth.getUser();
-    if(!error&&user)setUser(user);else setUser(null);
-    await loadListings();
-  }
-  init();
-})();
+const SUPABASE_URL = "https://uqfzuspzmwbttgiulkof.supabase.co";
+// Paste your Supabase publishable/anon key between the quotes below. Never use a service_role key in a browser app.
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+const supabaseReady = !!(window.supabase && SUPABASE_ANON_KEY !== "PASTE_YOUR_SUPABASE_ANON_KEY_HERE");
+const sb = supabaseReady ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
+const PROVINCES={"Central":["Kabwe","Kapiri Mposhi","Mkushi","Serenje","Mumbwa"],"Copperbelt":["Kitwe","Ndola","Chingola","Mufulira","Luanshya","Kalulushi","Chililabombwe","Lufwanyama","Masaiti"],"Eastern":["Chipata","Katete","Petauke","Lundazi","Nyimba","Chadiza"],"Luapula":["Mansa","Samfya","Nchelenge","Kawambwa","Mwense","Chembe"],"Lusaka":["Lusaka","Chongwe","Kafue","Chilanga","Rufunsa"],"Muchinga":["Chinsali","Mpika","Nakonde","Isoka","Shiwang'andu","Mafinga"],"Northern":["Kasama","Mbala","Mpulungu","Mungwi","Luwingu","Kaputa"],"North-Western":["Solwezi","Mwinilunga","Zambezi","Kasempa","Mushindamo","Chavuma"],"Southern":["Livingstone","Choma","Mazabuka","Monze","Kalomo","Pemba","Siavonga","Sinazongwe"],"Western":["Mongu","Senanga","Sesheke","Kaoma","Limulunga","Kalabo"]};
+const CATEGORIES=["Electronics","Fashion","Services","Home & Living","Agriculture","Vehicles","Property","Food & Groceries","Other"];
+let currentUser=null, listings=[], businesses=[], selectedCategory="All", authState="login", dashMode="mine", editingListing=null;
+const $=id=>document.getElementById(id);
+const money=v=>v===null||v===undefined||v===""?"Price on request":"K"+Number(v).toLocaleString("en-ZM");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function initSelects(){const prov=Object.keys(PROVINCES);["provinceFilter","lProvince","bProvince"].forEach(id=>$(id).innerHTML=(id==="provinceFilter"?'<option value="">All provinces</option>':'<option value="">Select province</option>')+prov.map(p=>`<option>${p}</option>`).join(""));$("lCategory").innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join("");$("categoryFilters").innerHTML=["All",...CATEGORIES].map(c=>`<button class="chip ${c==="All"?"active":""}" onclick="chooseCategory('${c}')">${c}</button>`).join("");$("provinceLinks").innerHTML=prov.map(p=>`<button class="chip" onclick="setProvince('${p}')">${p}</button>`).join("");updateTownFilter()}
+function updateTownFilter(){let p=$("provinceFilter").value;let towns=p?PROVINCES[p]:[];$("townFilter").innerHTML='<option value="">All towns</option>'+towns.map(t=>`<option>${t}</option>`).join("")}
+function chooseCategory(c){selectedCategory=c;document.querySelectorAll("#categoryFilters .chip").forEach(b=>b.classList.toggle("active",b.textContent===c));renderListings()}
+function setProvince(p){$("provinceFilter").value=p;updateTownFilter();renderListings();window.scrollTo({top:300,behavior:"smooth"})}
+function showPage(page){["home","dashboard","business","admin"].forEach(p=>$(p+"Page").classList.toggle("hidden",p!==page));if(page==="dashboard")renderDashboard();if(page==="business")renderBusinesses();if(page==="admin")renderAdmin();window.scrollTo(0,0)}
+function openAuth(){if(!sb){alert("Add your Supabase anon/publishable key in index.html first. See README.");return}authMode("login");$("authMessage").innerHTML="";$("authModal").classList.add("show")}
+function closeModal(id){$(id).classList.remove("show")}
+function authMode(mode){authState=mode;$("authTitle").textContent=mode==="login"?"Welcome back":"Create your Zanvique account";$("nameWrap").classList.toggle("hidden",mode!=="signup");$("authName").required=mode==="signup";$("authSubmit").textContent=mode==="login"?"Sign in":"Create account";$("loginTab").classList.toggle("active",mode==="login");$("signupTab").classList.toggle("active",mode==="signup")}
+$("authForm").addEventListener("submit",async e=>{e.preventDefault();if(!sb)return;let email=$("authEmail").value.trim(),password=$("authPassword").value;let r=authState==="signup"?await sb.auth.signUp({email,password,options:{data:{full_name:$("authName").value.trim()}}}):await sb.auth.signInWithPassword({email,password});$("authMessage").innerHTML=r.error?`<div class="notice danger">${esc(r.error.message)}</div>`:`<div class="notice">${authState==="signup"?"Account created. Check your email if confirmation is enabled.":"Signed in successfully."}</div>`;if(!r.error&&r.data.session){currentUser=r.data.user;closeModal("authModal");updateAuthUI();await loadData();showPage("dashboard")}});
+async function signOut(){if(sb)await sb.auth.signOut();currentUser=null;updateAuthUI();showPage("home")}
+function updateAuthUI(){$("authButton").textContent=currentUser?"Account":"Sign in"}
+async function loadData(){if(!sb){renderListings();return}let {data,error}=await sb.from("listings").select("*").eq("status","published").order("created_at",{ascending:false}).limit(300);if(error){console.error(error);$("emptyState").classList.remove("hidden");$("emptyState").textContent="Could not load online listings: "+error.message+" — check the SQL setup in README.";listings=[]}else listings=data||[];renderListings();let b=await sb.from("business_profiles").select("*").limit(100);businesses=b.data||[]}
+function renderListings(){let q=$("searchText").value.toLowerCase(),p=$("provinceFilter").value,t=$("townFilter").value,sort=$("sortFilter").value;let rows=listings.filter(x=>(selectedCategory==="All"||x.category===selectedCategory)&&(!p||x.province===p)&&(!t||x.town===t)&&(!q||[x.title,x.description,x.town,x.province,x.category].join(" ").toLowerCase().includes(q)));if(sort==="low")rows.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));if(sort==="high")rows.sort((a,b)=>(b.price??-Infinity)-(a.price??-Infinity));$("resultCount").textContent=rows.length+" results";$("listingGrid").innerHTML=rows.map(cardHTML).join("");$("emptyState").classList.toggle("hidden",rows.length>0)}
+function cardHTML(x){let img=x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}">`:"<span>🛍️</span>";return `<article class="card"><div class="photo">${img}</div><div class="cardbody">${x.is_featured?'<span class="badge">FEATURED</span> ':''}<div class="meta">${esc(x.category)} · ${esc(x.town)}, ${esc(x.province)}</div><h3>${esc(x.title)}</h3><div class="price">${money(x.price)}</div><div class="meta">${esc((x.description||"").slice(0,85))}${(x.description||"").length>85?"…":""}</div><div class="actions"><button class="btn small" onclick="showDetail('${x.id}')">View details</button><button class="btn light small" onclick="toggleFavorite('${x.id}')">♡ Save</button></div></div></article>`}
+function openListing(id=null){if(!currentUser){openAuth();return}editingListing=id?listings.find(x=>String(x.id)===String(id)):null;$("listingForm").reset();$("editId").value=editingListing?.id||"";$("listingModalTitle").textContent=editingListing?"Edit listing":"Create a listing";if(editingListing){$("lTitle").value=editingListing.title;$("lCategory").value=editingListing.category;$("lPrice").value=editingListing.price??"";$("lProvince").value=editingListing.province;$("lTown").value=editingListing.town;$("lPhone").value=editingListing.phone;$("lType").value=editingListing.listing_type||"For sale";$("lDescription").value=editingListing.description;$("lFeatured").checked=!!editingListing.featured_requested}$("listingMessage").innerHTML="";$("listingModal").classList.add("show")}
+$("listingForm").addEventListener("submit",async e=>{e.preventDefault();if(!sb||!currentUser)return;let msg=$("listingMessage");msg.innerHTML='<div class="notice">Publishing…</div>';let image_url=editingListing?.image_url||null,file=$("lImage").files[0];if(file){let path=`${currentUser.id}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;let up=await sb.storage.from("listing-images").upload(path,file,{upsert:true});if(up.error){msg.innerHTML=`<div class="notice danger">Image upload failed: ${esc(up.error.message)}</div>`;return}image_url=sb.storage.from("listing-images").getPublicUrl(path).data.publicUrl}
+let payload={user_id:currentUser.id,title:$("lTitle").value.trim(),category:$("lCategory").value,price:$("lPrice").value?Number($("lPrice").value):null,province:$("lProvince").value,town:$("lTown").value.trim(),phone:$("lPhone").value.trim(),listing_type:$("lType").value,description:$("lDescription").value.trim(),image_url,featured_requested:$("lFeatured").checked,status:"published"};
+let r=editingListing?await sb.from("listings").update(payload).eq("id",editingListing.id).eq("user_id",currentUser.id):await sb.from("listings").insert(payload);if(r.error){msg.innerHTML=`<div class="notice danger">Could not publish: ${esc(r.error.message)}</div>`;return}closeModal("listingModal");await loadData();showPage("dashboard")});
+async function showDetail(id){let x=listings.find(v=>String(v.id)===String(id));if(!x)return;let reviews=[];if(sb){let r=await sb.from("reviews").select("*").eq("listing_id",x.id).order("created_at",{ascending:false});reviews=r.data||[]}let phone=String(x.phone||"").replace(/\D/g,"");if(phone.startsWith("0"))phone="260"+phone.slice(1);$("detailContent").innerHTML=`${x.image_url?`<img class="detailphoto" src="${esc(x.image_url)}">`:""}<h2>${esc(x.title)}</h2><div class="meta">${esc(x.category)} · ${esc(x.town)}, ${esc(x.province)}</div><div class="price">${money(x.price)}</div><p>${esc(x.description)}</p><p><b>Listing type:</b> ${esc(x.listing_type||"For sale")}</p><div class="actions"><a class="btn" href="https://wa.me/${phone}?text=${encodeURIComponent("Hello, I found your listing on Zanvique: "+x.title)}" target="_blank" rel="noopener">WhatsApp seller</a><button class="btn light" onclick="toggleFavorite('${x.id}')">♡ Save listing</button>${currentUser&&x.user_id===currentUser.id?`<button class="btn light" onclick="closeModal('detailModal');openListing('${x.id}')">Edit</button>`:""}</div><hr><h3>Ratings & reviews</h3>${reviews.map(r=>`<p>⭐ ${r.rating}/5 — ${esc(r.comment||"")}</p>`).join("")||'<p class="muted">No reviews yet.</p>'}${currentUser&&x.user_id!==currentUser.id?`<form onsubmit="submitReview(event,'${x.id}')"><label>Your rating</label><select class="field" id="reviewRating"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select><label>Review</label><textarea class="field" id="reviewComment" rows="2"></textarea><button class="btn small" style="margin-top:8px">Submit review</button></form>`:""}`;$("detailModal").classList.add("show")}
+async function submitReview(e,id){e.preventDefault();if(!sb||!currentUser)return;let r=await sb.from("reviews").insert({listing_id:id,user_id:currentUser.id,rating:Number($("reviewRating").value),comment:$("reviewComment").value});if(r.error)alert(r.error.message);else showDetail(id)}
+function getFavorites(){try{return JSON.parse(localStorage.getItem("zanvique_favs")||"[]")}catch{return []}}
+async function toggleFavorite(id){let a=getFavorites();a=a.includes(String(id))?a.filter(x=>x!==String(id)):[...a,String(id)];localStorage.setItem("zanvique_favs",JSON.stringify(a));if(sb&&currentUser){await sb.from("favorites").upsert({user_id:currentUser.id,listing_id:id},{onConflict:"user_id,listing_id"})}alert(a.includes(String(id))?"Saved to favourites":"Removed from favourites")}
+function renderDashboard(){if(!currentUser){$("dashboardContent").innerHTML='<p>Sign in to access your personal dashboard.</p><button class="btn" onclick="openAuth()">Sign in / Create account</button>'; $("dashboardTabContent").innerHTML="";return}$("dashboardContent").innerHTML=`<h2>Welcome to Zanvique</h2><p>${esc(currentUser.email)}</p><div class="statgrid"><div class="stat"><b>${listings.filter(x=>x.user_id===currentUser.id).length}</b><span>Published listings</span></div><div class="stat"><b>${getFavorites().length}</b><span>Saved listings</span></div><div class="stat"><b>✓</b><span>Account active</span></div></div><p><button class="btn" onclick="openListing()">+ Create listing</button> <button class="btn light" onclick="showPage('admin')">Admin tools</button></p>`;dashboardTab(dashMode)}
+async function dashboardTab(mode,btn){dashMode=mode;document.querySelectorAll("#dashboardTabs .tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");let el=$("dashboardTabContent");if(!currentUser){el.innerHTML="";return}if(mode==="mine"){let mine=listings.filter(x=>x.user_id===currentUser.id);el.innerHTML=mine.length?`<div class="grid">${mine.map(x=>cardHTML(x)+`<div class="actions"><button class="btn light small" onclick="openListing('${x.id}')">Edit</button><button class="btn small" onclick="deleteListing('${x.id}')">Delete</button></div>`).join("")}</div>`:'<div class="empty">You have not published any listings yet.</div>'}else if(mode==="saved"){let ids=getFavorites(),saved=listings.filter(x=>ids.includes(String(x.id)));el.innerHTML=saved.length?`<div class="grid">${saved.map(cardHTML).join("")}</div>`:'<div class="empty">Your saved listings will appear here.</div>'}else if(mode==="profile"){let p=await sb.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();let v=p.data||{};el.innerHTML=`<form onsubmit="saveProfile(event)"><label>Full name</label><input class="field" id="pName" value="${esc(v.full_name||currentUser.user_metadata?.full_name||"")}"><label>Phone</label><input class="field" id="pPhone" value="${esc(v.phone||"")}"><label>About</label><textarea class="field" id="pAbout">${esc(v.about||"")}</textarea><button class="btn" style="margin-top:10px">Save profile</button></form>`}else{let n=await sb.from("notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(30);el.innerHTML=(n.data||[]).map(x=>`<div class="panel"><b>${esc(x.title)}</b><p>${esc(x.message)}</p><small class="meta">${esc(x.created_at)}</small></div>`).join("")||'<div class="empty">No notifications yet.</div>'}}
+async function saveProfile(e){e.preventDefault();let r=await sb.from("profiles").upsert({id:currentUser.id,full_name:$("pName").value,phone:$("pPhone").value,about:$("pAbout").value});alert(r.error?r.error.message:"Profile saved")}
+async function deleteListing(id){if(!confirm("Delete this listing permanently?"))return;let r=await sb.from("listings").delete().eq("id",id).eq("user_id",currentUser.id);if(r.error)alert(r.error.message);else{await loadData();renderDashboard()}}
+function openBusiness(){if(!currentUser){openAuth();return}$("businessForm").reset();$("businessMessage").innerHTML="";$("businessModal").classList.add("show")}
+$("businessForm").addEventListener("submit",async e=>{e.preventDefault();let r=await sb.from("business_profiles").upsert({user_id:currentUser.id,name:$("bName").value,category:$("bCategory").value,province:$("bProvince").value,town:$("bTown").value,phone:$("bPhone").value,description:$("bDescription").value});$("businessMessage").innerHTML=r.error?`<div class="notice danger">${esc(r.error.message)}</div>`:'<div class="notice">Business profile saved.</div>';if(!r.error){let x=await sb.from("business_profiles").select("*");businesses=x.data||[];renderBusinesses()}})
+function renderBusinesses(){$("businessGrid").innerHTML=businesses.map(b=>`<div class="card"><div class="cardbody"><span class="badge">BUSINESS</span><h3>${esc(b.name)}</h3><div class="meta">${esc(b.category)} · ${esc(b.town)}, ${esc(b.province)}</div><p>${esc(b.description||"")}</p><a class="btn small" href="https://wa.me/${String(b.phone||"").replace(/\D/g,"")}" target="_blank">Contact business</a></div></div>`).join("")||'<div class="empty">No business profiles published yet.</div>'}
+async function renderAdmin(){if(!currentUser){$("adminContent").innerHTML="Sign in first.";return}let p=await sb.from("profiles").select("is_admin").eq("id",currentUser.id).maybeSingle();if(!p.data?.is_admin){$("adminContent").innerHTML='<div class="notice danger">Admin access is restricted. An administrator must enable is_admin for your profile in Supabase.</div>';return}let [l,u,r]=await Promise.all([sb.from("listings").select("*",{count:"exact",head:true}),sb.from("profiles").select("*",{count:"exact",head:true}),sb.from("listings").select("*").eq("featured_requested",true)]);$("adminContent").innerHTML=`<div class="statgrid"><div class="stat"><b>${l.count||0}</b>Listings</div><div class="stat"><b>${u.count||0}</b>Users</div><div class="stat"><b>${(r.data||[]).length}</b>Featured requests</div></div><h3>Featured listing requests</h3>${(r.data||[]).map(x=>`<p>${esc(x.title)} — ${esc(x.town)} <button class="btn small" onclick="featureListing('${x.id}',true)">Approve</button> <button class="btn light small" onclick="featureListing('${x.id}',false)">Reject</button></p>`).join("")||"No pending requests."}<p class="muted">Admin moderation, user management and reports can be expanded through the database policies and admin controls.</p>`}
+async function featureListing(id,yes){let r=await sb.from("listings").update({is_featured:yes,featured_requested:false}).eq("id",id);if(r.error)alert(r.error.message);else renderAdmin()}
+function init(){initSelects();$("year").textContent=new Date().getFullYear();renderListings();if(!sb){$("emptyState").classList.remove("hidden");$("emptyState").innerHTML='Preview mode: add your Supabase public key and run the database setup to enable live accounts and listings.';return}sb.auth.getSession().then(async({data})=>{currentUser=data.session?.user||null;updateAuthUI();await loadData()});sb.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateAuthUI()})}
+if("serviceWorker" in navigator && location.protocol!=="file:")window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.warn));
+init();
 </script>
-</body>
-</html>
+</body></html>

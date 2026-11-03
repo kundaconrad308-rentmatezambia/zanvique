@@ -1,0 +1,8 @@
+{
+  "appId": "zm.zanvique.app",
+  "appName": "Zanvique",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}
