@@ -320,6 +320,434 @@ async function init(){
  sb.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;setUser(user);if(user){setTimeout(async()=>{await ensureProfile();await syncSaved()},0)}else isAdmin=false});
  await loadListings();
 }
+/* =====================================================
+   ZANVIQUE GPS + NEARBY DISCOVERY UPGRADE
+   Paste immediately above the existing init();
+===================================================== */
+
+let currentCoords = null;
+let nearbyOnly = false;
+let zanMap = null;
+let mapMarkers = [];
+let userMarker = null;
+let leafletReady = false;
+
+(function addGpsInterface() {
+  const css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+  document.head.appendChild(css);
+
+  const script = document.createElement("script");
+  script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+  script.onload = () => {
+    leafletReady = true;
+    renderListings();
+  };
+  script.onerror = () => {
+    $("gpsStatus").textContent =
+      "The map could not load. Check your internet connection.";
+  };
+  document.head.appendChild(script);
+
+  const searchPanel = $("searchForm").closest(".panel");
+  searchPanel.insertAdjacentHTML("afterend", `
+    <div class="panel">
+      <div class="head" style="margin-top:0">
+        <h2>Discover near you</h2>
+        <span class="badge">GPS</span>
+      </div>
+      <p class="small">
+        Find products and services close to your current location.
+        Your location is not saved to your account.
+      </p>
+      <div class="row">
+        <button type="button" class="btn" onclick="locateMe()">
+          ◎ Use my current location
+        </button>
+        <select class="field" id="nearRadius" style="max-width:150px">
+          <option value="5">Within 5 km</option>
+          <option value="10" selected>Within 10 km</option>
+          <option value="25">Within 25 km</option>
+          <option value="50">Within 50 km</option>
+          <option value="100">Within 100 km</option>
+        </select>
+        <button type="button" class="btn light" id="nearToggle"
+          onclick="toggleNearby()">
+          Show nearby listings
+        </button>
+      </div>
+      <div id="gpsStatus" class="notice">
+        GPS is off. Allow location access to discover nearby listings.
+      </div>
+      <div id="listingMap"
+        style="height:330px;width:100%;border-radius:12px;z-index:1">
+      </div>
+      <p class="small">
+        Map pins appear for listings whose sellers have added GPS coordinates.
+      </p>
+    </div>
+  `);
+
+  $("lTown").insertAdjacentHTML("afterend", `
+    <div class="span2">
+      <button type="button" class="btn light"
+        onclick="captureListingLocation()">
+        ◎ Add my listing's GPS location
+      </button>
+      <p id="listingGpsStatus" class="small">
+        Optional: add your location so nearby customers can find this listing.
+      </p>
+      <input type="hidden" id="lLatitude">
+      <input type="hidden" id="lLongitude">
+    </div>
+  `);
+
+  $("nearRadius").addEventListener("change", renderListings);
+})();
+
+function distanceKm(a, b) {
+  const R = 6371;
+  const rad = Math.PI / 180;
+  const dLat = (b.lat - a.lat) * rad;
+  const dLon = (b.lng - a.lng) * rad;
+
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(a.lat * rad) *
+    Math.cos(b.lat * rad) *
+    Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function listingDistance(x) {
+  if (!currentCoords || x.latitude == null || x.longitude == null) {
+    return null;
+  }
+
+  const lat = Number(x.latitude);
+  const lng = Number(x.longitude);
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+  return distanceKm(currentCoords, { lat, lng });
+}
+
+function initZanMap() {
+  if (zanMap || !leafletReady || !document.getElementById("listingMap")) {
+    return;
+  }
+
+  zanMap = L.map("listingMap").setView([-13.1339, 27.8493], 6);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap contributors"
+  }).addTo(zanMap);
+}
+
+function updateZanMap(rows) {
+  if (!leafletReady) return;
+
+  initZanMap();
+  if (!zanMap) return;
+
+  mapMarkers.forEach(marker => zanMap.removeLayer(marker));
+  mapMarkers = [];
+
+  rows.forEach(raw => {
+    const x = normalise(raw);
+
+    if (x.latitude == null || x.longitude == null) return;
+
+    const lat = Number(x.latitude);
+    const lng = Number(x.longitude);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    const marker = L.marker([lat, lng]).addTo(zanMap);
+
+    marker.bindPopup(
+      `<b>${esc(x.title)}</b><br>${esc(x.town)}, ${esc(x.province)}`
+    );
+
+    mapMarkers.push(marker);
+  });
+
+  const points = [...mapMarkers];
+
+  if (currentCoords) {
+    if (userMarker) zanMap.removeLayer(userMarker);
+
+    userMarker = L.circleMarker(
+      [currentCoords.lat, currentCoords.lng],
+      {
+        radius: 9,
+        color: "#123c2b",
+        fillColor: "#c9f36b",
+        fillOpacity: 1
+      }
+    ).addTo(zanMap).bindPopup("Your current location");
+
+    points.push(userMarker);
+  }
+
+  if (points.length > 1) {
+    zanMap.fitBounds(L.featureGroup(points).getBounds().pad(0.15));
+  } else if (currentCoords) {
+    zanMap.setView([currentCoords.lat, currentCoords.lng], 13);
+  } else if (mapMarkers.length === 1) {
+    zanMap.setView(mapMarkers[0].getLatLng(), 13);
+  }
+
+  setTimeout(() => zanMap.invalidateSize(), 150);
+}
+
+function locateMe() {
+  if (!navigator.geolocation) {
+    notice("gpsStatus", "GPS is not supported by this browser.", true);
+    return;
+  }
+
+  notice("gpsStatus", "Requesting permission to access your location...");
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      currentCoords = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      nearbyOnly = true;
+      $("nearToggle").textContent = "Show all listings";
+
+      notice(
+        "gpsStatus",
+        "Location found! Showing listings within your selected distance."
+      );
+
+      renderListings();
+    },
+    error => {
+      const messages = {
+        1: "Location permission denied. Allow location access in your browser settings.",
+        2: "Your location is unavailable. Please try again.",
+        3: "GPS request timed out. Please try again."
+      };
+
+      notice(
+        "gpsStatus",
+        messages[error.code] || "Could not get your location.",
+        true
+      );
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 60000
+    }
+  );
+}
+
+function toggleNearby() {
+  if (!currentCoords) {
+    notice("gpsStatus", "First select 'Use my current location'.", true);
+    return;
+  }
+
+  nearbyOnly = !nearbyOnly;
+
+  $("nearToggle").textContent = nearbyOnly
+    ? "Show all listings"
+    : "Show nearby listings";
+
+  renderListings();
+}
+
+function captureListingLocation() {
+  if (!navigator.geolocation) {
+    $("listingGpsStatus").textContent =
+      "GPS is not supported by this browser.";
+    return;
+  }
+
+  $("listingGpsStatus").textContent = "Getting your location...";
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      $("lLatitude").value = position.coords.latitude;
+      $("lLongitude").value = position.coords.longitude;
+
+      $("listingGpsStatus").textContent =
+        "GPS location added. It will be saved with your listing.";
+    },
+    error => {
+      $("listingGpsStatus").textContent =
+        error.code === 1
+          ? "Permission denied. You can still publish without GPS."
+          : "Could not get your location. Please try again.";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 60000
+    }
+  );
+}
+
+/* Preserve the existing listing editor and add GPS values. */
+const originalOpenListing = openListing;
+
+openListing = function(id = null) {
+  originalOpenListing(id);
+
+  const x = id
+    ? allListings.find(v => String(v.id) === String(id))
+    : null;
+
+  $("lLatitude").value = x?.latitude ?? "";
+  $("lLongitude").value = x?.longitude ?? "";
+
+  $("listingGpsStatus").textContent = x?.latitude != null
+    ? "This listing already has GPS coordinates."
+    : "Optional: add your location so nearby customers can find this listing.";
+};
+
+/* Replace the existing search filtering with GPS-aware filtering. */
+filtered = function() {
+  const q = $("q").value.trim().toLowerCase();
+  const p = $("province").value;
+  const t = $("town").value.trim().toLowerCase();
+  const sort = $("sort").value;
+
+  let rows = allListings.filter(raw => {
+    const x = normalise(raw);
+    const distance = listingDistance(x);
+
+    return (
+      (category === "All" || x.category === category) &&
+      (!p || x.province === p) &&
+      (!t || x.town.toLowerCase().includes(t)) &&
+      (!q || [
+        x.title,
+        x.description,
+        x.category,
+        x.town,
+        x.province,
+        x.listing_type
+      ].join(" ").toLowerCase().includes(q)) &&
+      (
+        !nearbyOnly ||
+        (distance !== null &&
+         distance <= Number($("nearRadius").value))
+      )
+    );
+  });
+
+  rows.sort((a, b) =>
+    sort === "low"
+      ? (Number(a.price) || Infinity) - (Number(b.price) || Infinity)
+      : sort === "high"
+      ? (Number(b.price) || 0) - (Number(a.price) || 0)
+      : sort === "az"
+      ? String(a.title).localeCompare(String(b.title))
+      : String(b.created_at || "").localeCompare(String(a.created_at || ""))
+  );
+
+  return rows;
+};
+
+/* Refresh listing cards and the map together. */
+renderListings = function() {
+  const rows = filtered();
+
+  $("count").textContent =
+    `${rows.length} ${rows.length === 1 ? "listing" : "listings"}`;
+
+  $("listingGrid").innerHTML = rows.length
+    ? rows.map(card).join("")
+    : '<div class="empty">No listings match your search or selected distance. Try another town or distance.</div>';
+
+  updateZanMap(rows);
+};
+
+/* Save GPS coordinates along with the listing. */
+$("listingForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  if (!user) return;
+
+  const btn = $("publishBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  try {
+    const edit = $("editId").value;
+    const existing = edit
+      ? allListings.find(x => String(x.id) === edit)
+      : null;
+
+    const file = $("lImage").files[0];
+    let image_url = existing?.image_url || null;
+
+    if (file) image_url = await uploadPhoto(file);
+
+    const payload = {
+      title: $("lTitle").value.trim(),
+      category: $("lCategory").value,
+      price: $("lPrice").value
+        ? Number($("lPrice").value)
+        : null,
+      province: $("lProvince").value,
+      town: $("lTown").value.trim(),
+      contact: $("lContact").value.trim(),
+      listing_type: $("lType").value,
+      description: $("lDescription").value.trim(),
+      user_id: user.id,
+      status: "published",
+      featured_requested: $("lFeatured").checked,
+      latitude: $("lLatitude").value
+        ? Number($("lLatitude").value)
+        : null,
+      longitude: $("lLongitude").value
+        ? Number($("lLongitude").value)
+        : null
+    };
+
+    if (image_url) payload.image_url = image_url;
+
+    const result = edit
+      ? await sb.from(TABLE)
+          .update(payload)
+          .eq("id", edit)
+          .eq("user_id", user.id)
+      : await sb.from(TABLE).insert(payload);
+
+    if (result.error) throw result.error;
+
+    closeModal("listingModal");
+    await loadListings();
+    go("explore");
+
+    notice(
+      "status",
+      edit
+        ? "Your listing was updated."
+        : "Your listing has been published."
+    );
+  } catch (err) {
+    notice("listingMsg", err.message || "Could not save listing.", true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Publish listing";
+  }
+}, true);
+
+/* =====================================================
+   END GPS UPGRADE
+===================================================== */
 init();
 </script>
 </body>
