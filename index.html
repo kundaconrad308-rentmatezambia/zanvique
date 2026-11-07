@@ -109,6 +109,18 @@
 
 <div class="modal" id="listingModal"><div class="modalbox"><div class="modalhead"><h2 id="listingModalTitle">Create a listing</h2><button class="close" onclick="closeModal('listingModal')">×</button></div>
 <form id="listingForm"><input type="hidden" id="editId"><div class="formgrid">
+ 
+<div class="span2">
+  <label>Listing location coordinates</label>
+  <div class="row">
+    <input class="field" id="lLatitude" placeholder="Latitude" readonly>
+    <input class="field" id="lLongitude" placeholder="Longitude" readonly>
+  </div>
+  <button class="btn light" type="button" onclick="captureListingLocation()">
+    Get listing GPS coordinates
+  </button>
+  <p class="small">Allow location access when your browser asks.</p>
+</div>
  <div class="span2"><label>Product, service or opportunity *</label><input class="field" id="lTitle" required maxlength="110"></div>
  <div><label>Category *</label><select class="field" id="lCategory" required></select></div><div><label>Price in ZMW</label><input class="field" id="lPrice" type="number" min="0" step="0.01" placeholder="Optional"></div>
  <div><label>Province *</label><select class="field" id="lProvince" required></select></div><div><label>Town *</label><input class="field" id="lTown" required list="townOptions"></div>
@@ -414,7 +426,7 @@ async function init(){
   notice("status","Zanvique could not finish connecting: "+(err.message||err),true);
  }
 }
- JavaScript
+ 
 // ZANVIQUE GPS AND BUILDING SEARCH
 
 let zanviqueGPS = null;
