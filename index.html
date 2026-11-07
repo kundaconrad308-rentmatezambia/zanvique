@@ -748,6 +748,77 @@ $("listingForm").addEventListener("submit", async e => {
 /* =====================================================
    END GPS UPGRADE
 ===================================================== */
+
+/* ZANVIQUE PASSWORD RECOVERY UPGRADE */
+
+async function zanviquePasswordReset() {
+  const email = document.getElementById("loginEmail").value.trim();
+
+  if (!email) {
+    alert("Enter your account email address first.");
+    return;
+  }
+
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname
+  });
+
+  if (error) {
+    alert("Password reset failed: " + error.message);
+  } else {
+    alert("Password reset instructions have been sent. Check your email.");
+  }
+}
+
+async function zanviqueRecoveryHandler(event) {
+  if (event !== "PASSWORD_RECOVERY") return;
+
+  const newPassword = prompt("Enter your new password (at least 8 characters):");
+
+  if (!newPassword) return;
+
+  if (newPassword.length < 8) {
+    alert("Your password must contain at least 8 characters.");
+    return;
+  }
+
+  const { error } = await sb.auth.updateUser({
+    password: newPassword
+  });
+
+  if (error) {
+    alert("Could not update password: " + error.message);
+  } else {
+    alert("Your Zanvique password has been updated successfully.");
+  }
+}
+
+/* Add password recovery button */
+(function addRecoveryButton() {
+  const login = document.getElementById("loginForm");
+
+  if (!login || document.getElementById("forgotPassword")) return;
+
+  const button = document.createElement("button");
+
+  button.type = "button";
+  button.id = "forgotPassword";
+  button.className = "tab";
+  button.textContent = "Forgot password?";
+
+  button.style.marginTop = "10px";
+
+  button.onclick = zanviquePasswordReset;
+
+  login.appendChild(button);
+})();
+
+/* Listen for Supabase password recovery */
+sb.auth.onAuthStateChange((event) => {
+  zanviqueRecoveryHandler(event);
+});
+
+/* END PASSWORD RECOVERY UPGRADE */
 init();
 </script>
 </body>
