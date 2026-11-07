@@ -269,18 +269,139 @@ document.addEventListener("click",e=>{
 });
 $("searchForm").addEventListener("submit",e=>{e.preventDefault();renderListings()});
 ["q","province","town","sort"].forEach(id=>$(id).addEventListener(id==="q"||id==="town"?"input":"change",renderListings));
-$("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();notice("accountState","Signing in…");
- const {data,error}=await sb.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
- if(error){notice("accountState",error.message,true);return}
- setUser(data.user);await ensureProfile();await syncSaved();await loadListings();notice("accountState","Signed in successfully.");
+
+function authBackgroundTasks() {
+  ensureProfile().catch(console.error);
+  syncSaved().catch(console.error);
+  loadListings().catch(console.error);
+}
+
+function authRequest(promise, timeout = 20000) {
+  let timer;
+
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      timer = setTimeout(
+        () => reject(new Error(
+          "Connection timed out. Check your internet and try again."
+        )),
+        timeout
+      );
+    })
+  ]).finally(() => clearTimeout(timer));
+}
+
+// SIGN IN
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const button = form.querySelector("button[type='submit'], button:not([type])");
+
+  button.disabled = true;
+  button.textContent = "Signing in...";
+
+  notice("accountState", "Connecting securely to Zanvique...");
+
+  try {
+    const { data, error } = await authRequest(
+      sb.auth.signInWithPassword({
+        email: $("loginEmail").value.trim(),
+        password: $("loginPassword").value
+      })
+    );
+
+    if (error) throw error;
+
+    setUser(data.user);
+
+    notice(
+      "accountState",
+      "Welcome back! You are successfully signed in."
+    );
+
+    authBackgroundTasks();
+
+  } catch (error) {
+    notice(
+      "accountState",
+      error.message || "Sign in failed. Please try again.",
+      true
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Sign in";
+  }
 });
-$("signupForm").addEventListener("submit",async e=>{
- e.preventDefault();notice("accountState","Creating your account…");
- const {data,error}=await sb.auth.signUp({email:$("signupEmail").value.trim(),password:$("signupPassword").value,options:{data:{full_name:$("signupName").value.trim()}}});
- if(error){notice("accountState",error.message,true);return}
- if(data.session){setUser(data.user);await ensureProfile();await loadListings();notice("accountState","Your account is ready.")}else notice("accountState","Account created. Check your email to confirm it, then sign in.");
+
+// CREATE ACCOUNT
+$("signupForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const button = form.querySelector("button[type='submit'], button:not([type])");
+
+  const email = $("signupEmail").value.trim();
+  const password = $("signupPassword").value;
+  const fullName = $("signupName").value.trim();
+
+  if (password.length < 6) {
+    notice("accountState", "Password must contain at least 6 characters.", true);
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Creating account...";
+
+  notice("accountState", "Creating your Zanvique account...");
+
+  try {
+    const { data, error } = await authRequest(
+      sb.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName
+          },
+          emailRedirectTo:
+            window.location.origin + window.location.pathname
+        }
+      })
+    );
+
+    if (error) throw error;
+
+    if (data.session && data.user) {
+      setUser(data.user);
+
+      notice(
+        "accountState",
+        "Your Zanvique account is ready. Welcome!"
+      );
+
+      authBackgroundTasks();
+
+    } else {
+      notice(
+        "accountState",
+        "Account created successfully! Please check your email, confirm your address, then sign in."
+      );
+    }
+
+  } catch (error) {
+    notice(
+      "accountState",
+      error.message || "Account creation failed. Please try again.",
+      true
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Create account";
+  }
 });
+
 async function ensureProfile(){
  if(!user)return;
  const {data}=await sb.from("profiles").select("id").eq("id",user.id).maybeSingle();
