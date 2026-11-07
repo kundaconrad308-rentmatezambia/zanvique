@@ -819,6 +819,158 @@ sb.auth.onAuthStateChange((event) => {
 });
 
 /* END PASSWORD RECOVERY UPGRADE */
+ 
+/* ZANVIQUE TOWNS, BUILDINGS AND LANDMARK SEARCH */
+
+(function addZanviquePlaceSearch() {
+  const mapElement = document.getElementById("listingMap");
+  if (!mapElement || document.getElementById("placeSearchPanel")) return;
+
+  mapElement.insertAdjacentHTML("beforebegin", `
+    <div id="placeSearchPanel" class="panel" style="margin:12px 0">
+      <h3 style="margin-top:0">Find a town, building or landmark</h3>
+      <p class="small">
+        Search places across Zambia, including towns, shopping centres,
+        hospitals, schools, markets and other mapped landmarks.
+      </p>
+      <form id="placeSearchForm">
+        <input id="placeSearchInput" class="field"
+          placeholder="e.g. Kitwe, ECL Business Park, Kitwe Teaching Hospital"
+          required>
+        <button class="btn" style="margin-top:8px;width:100%">
+          Search places
+        </button>
+      </form>
+      <div id="placeSearchStatus" class="notice">
+        Enter a place name to find its map coordinates.
+      </div>
+      <div id="placeSearchResults"></div>
+    </div>
+  `);
+
+  const form = document.getElementById("placeSearchForm");
+  const input = document.getElementById("placeSearchInput");
+  const status = document.getElementById("placeSearchStatus");
+  const results = document.getElementById("placeSearchResults");
+
+  let placeMarkers = [];
+
+  function showStatus(message, error = false) {
+    status.textContent = message;
+    status.classList.toggle("error", error);
+  }
+
+  function clearPlaceMarkers() {
+    if (!window.L || !window.zanMap) return;
+    placeMarkers.forEach(marker => window.zanMap.removeLayer(marker));
+    placeMarkers = [];
+  }
+
+  async function searchPlaces(query) {
+    showStatus("Searching mapped places in Zambia...");
+    results.innerHTML = "";
+
+    const url = new URL("https://nominatim.openstreetmap.org/search");
+    url.searchParams.set("q", query + ", Zambia");
+    url.searchParams.set("format", "jsonv2");
+    url.searchParams.set("addressdetails", "1");
+    url.searchParams.set("limit", "8");
+    url.searchParams.set("countrycodes", "zm");
+
+    try {
+      const response = await fetch(url.toString(), {
+        headers: { "Accept": "application/json" }
+      });
+
+      if (!response.ok) throw new Error("Location search is temporarily unavailable.");
+
+      const places = await response.json();
+
+      if (!places.length) {
+        showStatus("No mapped result found. Try another spelling or nearby landmark.", true);
+        return;
+      }
+
+      showStatus(
+        places.length + " mapped place(s) found. Select one to view it on the map."
+      );
+
+      results.innerHTML = places.map((place, index) => `
+        <button type="button" class="btn light"
+          data-place-index="${index}"
+          style="display:block;width:100%;text-align:left;margin-top:7px">
+          ${esc(place.name || place.display_name.split(",")[0])}
+          <span class="small" style="display:block">
+            ${esc(place.type || place.class || "Place")} ·
+            ${esc(place.display_name)}
+          </span>
+        </button>
+      `).join("");
+
+      results.querySelectorAll("[data-place-index]").forEach(button => {
+        button.addEventListener("click", () => {
+          const place = places[Number(button.dataset.placeIndex)];
+          selectPlace(place);
+        });
+      });
+
+      window.zanviqueFoundPlaces = places;
+
+    } catch (error) {
+      showStatus(error.message || "Could not search for places.", true);
+    }
+  }
+
+  function selectPlace(place) {
+    const lat = Number(place.lat);
+    const lng = Number(place.lon);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      showStatus("This result does not have usable coordinates.", true);
+      return;
+    }
+
+    if (!window.L || !window.zanMap) {
+      showStatus("The map is still loading. Please try again shortly.", true);
+      return;
+    }
+
+    clearPlaceMarkers();
+
+    const marker = L.marker([lat, lng]).addTo(window.zanMap);
+    marker.bindPopup(
+      "<b>" + esc(place.name || place.display_name.split(",")[0]) +
+      "</b><br>" + esc(place.display_name)
+    ).openPopup();
+
+    placeMarkers.push(marker);
+    window.zanMap.setView([lat, lng], 16);
+
+    if (typeof currentCoords !== "undefined") {
+      currentCoords = { lat, lng };
+      nearbyOnly = true;
+
+      const toggle = document.getElementById("nearToggle");
+      if (toggle) toggle.textContent = "Show all listings";
+
+      if (typeof renderListings === "function") renderListings();
+    }
+
+    showStatus(
+      "Selected: " + (place.name || place.display_name) +
+      ". Coordinates: " + lat.toFixed(6) + ", " + lng.toFixed(6) +
+      ". Nearby listings with GPS coordinates can now be filtered."
+    );
+  }
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const query = input.value.trim();
+    if (query) searchPlaces(query);
+  });
+})();
+
+/* END ZANVIQUE PLACE SEARCH */
 init();
 </script>
 </body>
