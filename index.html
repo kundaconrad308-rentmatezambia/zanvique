@@ -235,7 +235,27 @@ $("listingForm").addEventListener("submit",async e=>{
  try{
   const existing=$("editId").value?allListings.find(x=>String(x.id)===$("editId").value):null;
   const file=$("lImage").files[0];let image_url=existing?.image_url||null;if(file)image_url=await uploadPhoto(file);
-  const payload={title:$("lTitle").value.trim(),category:$("lCategory").value,price:$("lPrice").value?Number($("lPrice").value):null,province:$("lProvince").value,town:$("lTown").value.trim(),contact:$("lContact").value.trim(),listing_type:$("lType").value,description:$("lDescription").value.trim(),user_id:user.id,status:"published",featured_requested:$("lFeatured").checked};
+  const payload={
+  title:$("lTitle").value.trim(),
+  category:$("lCategory").value,
+  price:$("lPrice").value?Number($("lPrice").value):null,
+  province:$("lProvince").value,
+  town:$("lTown").value.trim(),
+  contact:$("lContact").value.trim(),
+  listing_type:$("lType").value,
+  description:$("lDescription").value.trim(),
+  user_id:user.id,
+  status:"published",
+  featured_requested:$("lFeatured").checked,
+
+  latitude:$("lLatitude").value
+    ?Number($("lLatitude").value)
+    :null,
+
+  longitude:$("lLongitude").value
+    ?Number($("lLongitude").value)
+    :null
+};
   if(image_url)payload.image_url=image_url;
   const edit=$("editId").value;
   const result=edit?await sb.from(TABLE).update(payload).eq("id",edit).eq("user_id",user.id):await sb.from(TABLE).insert(payload);
